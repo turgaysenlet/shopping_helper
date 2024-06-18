@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPC-A Barcode Scanner</title>
+    <script src="/scripts/quagga.min.js"></script>
+    <style>
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>UPC-A Barcode Scanner</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="barcodeImage" accept="image/*" required>
+        <button type="submit">Upload and Scan</button>
+    </form>
+
+    <% if (typeof imageUrl !== 'undefined') { %>
+        <div class="result">
+            <h2>Scanned Image</h2>
+            <img id="uploadedImage" src="<%= imageUrl %>" alt="Uploaded Image">
+            <h3>Detected Barcode: <span id="barcodeValue">Scanning...</span></h3>
+        </div>
+    <% } %>
+
+    <script>
+        <% if (typeof imageUrl !== 'undefined') { %>
+            window.addEventListener('load', () => {
+                Quagga.decodeSingle({
+                    src: "<%= imageUrl %>",
+                    numOfWorkers: 0,  // Needs to be 0 when used within node
+                    inputStream: {
+                        size: 800  // restrict input-size to be 800px in width (long-side)
+                    },
+                    decoder: {
+                        readers: [ "upc_reader", "ean_reader"] // List of active readers
+                    }
+                }, function(result) {
+                    if (result && result.codeResult) {
+                        document.getElementById('barcodeValue').textContent = result.codeResult.code + ' (' + result.codeResult.format + ')';
+                    } else {
+                        document.getElementById('barcodeValue').textContent = "No barcode detected";
+                    }
+                });
+            });
+        <% } %>
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+beautifulsoup4==4.12.3
+certifi==2024.2.2
+charset-normalizer==3.3.2
+idna==3.7
+pip==24.0
+requests==2.32.1
+setuptools==69.2.0
+soupsieve==2.5
+urllib3==2.2.1
+wheel==0.43.0
+fastapi==0.111.0
+uvicorn==0.29.0
+jinja2==3.1.4
